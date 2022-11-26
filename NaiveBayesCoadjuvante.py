@@ -1,4 +1,3 @@
-from math import ceil, pow, sqrt
 import numpy as np
 import openml
 import pandas as pd
@@ -28,18 +27,20 @@ arq = open("analiseNaiveBayesCoadjuvantes.txt", "a")
 
 # Adquirindo e processando o dataset de estado do olho via EEG 
 # Aqui, tentamos predizer se os olhos estão abertos ou fechados
+# estabelecendo que as classes são o estado do olho
+# 0 = aberto
+# 1 = fechado
 #-----------------------------------------------------------------------
-dataset = openml.datasets.get_dataset(1471)
+#dataset = openml.datasets.get_dataset(1471)
+
+# Adquirindo e processando o dataset do Centro de Transfusão de sangue
+# Aqui, tentamos predizer se os olhos estão abertos ou fechados
+dataset = openml.datasets.get_dataset(1464)
 
 X, y, categorical_indicator, attribute_names = dataset.get_data(
     dataset_format="array", target=dataset.default_target_attribute)
 
-#estabelecendo que as classes são o estado do olho
-#0= aberto
-#1= fechado
 df = pd.DataFrame(X, columns=attribute_names)
-
-#dropando colunas inúteis
 
 X_total = df.values
 y_total = y
