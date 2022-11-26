@@ -5,14 +5,14 @@ import openml
 import time
 from sklearn.naive_bayes import GaussianNB, CategoricalNB, MultinomialNB
 from sklearn.model_selection import train_test_split
-from openml.datasets import get_dataset
 
 arq = open("analiseNaiveBayesLiteratura.txt", "a")
 
-# Adquirindo e processando o dataset de LoL
-# Aqui, tentamos predizer as vitórias e derrotas baseado nas características de cada time
+# Adquirindo e processando o dataset de estado do olho via EEG 
+# Aqui, tentamos predizer se os olhos estão abertos ou fechados
 #-----------------------------------------------------------------------
-dataset = openml.datasets.get_dataset(1471)
+#openml.config.start_using_configuration_for_example()
+dataset = openml.datasets.get_dataset(1480)
 
 X, y, categorical_indicator, attribute_names = dataset.get_data(
     dataset_format="array", target=dataset.default_target_attribute)
@@ -30,7 +30,7 @@ y_total = y
 #não existem instâncias com valores nulos nesse dataset
 #Logo, não é necessário imputar dados
 
-#Estabelecendo porcentagens de treino e k's
+#Estabelecendo porcentagens de treino
 #-----------------------------------------------------------------------
 for pctg in range(50,100,10):
     trainPercentage = pctg/100
@@ -50,13 +50,6 @@ for pctg in range(50,100,10):
         nbGauss.fit(X_train, y_train)
         predGauss = nbGauss.predict(X_test)
 
-        # t2
-        t2 = time.time()
-
-        nbMulti = MultinomialNB()
-        nbMulti.fit(X_train, y_train)
-        predMulti = nbMulti.predict(X_test)
-
         # tf = Tempo Final
         tf = time.time()
 
@@ -64,13 +57,10 @@ for pctg in range(50,100,10):
         #-----------------------------------------------------------------------
 
         erroPctgGauss = (y_test != predGauss).sum()/X_test.shape[0]
-        erroPctgMulti = (y_test != predMulti).sum()/X_test.shape[0]
 
         arq.write("\n" + str(trainPercentage*100))
         arq.write("\t- " + str(erroPctgGauss))
-        arq.write("\t- " + str(erroPctgMulti))
-        arq.write("\t- " + str(t2-t1))
-        arq.write("\t- " + str(tf-t2))
+        arq.write("\t- " + str(tf-t1))
 
     arq.write("\n---------- ")
 
